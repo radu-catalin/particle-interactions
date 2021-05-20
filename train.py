@@ -13,7 +13,7 @@ from model import GCN
 from utils import device, MSELoss_L2, generate_dataset, generate_relational_matrix, plot_loss
 
 # hyperparams
-num_epochs = 30
+num_epochs = 15
 batch_size = 64
 learning_rate = 0.0001
 momentum = 0.9
