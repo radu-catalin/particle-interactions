@@ -14,7 +14,7 @@ from math import cos, pi, radians, sin
 import matplotlib
 import numpy as np
 
-matplotlib.use("Agg")
+# matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import matplotlib.animation as manimation
 

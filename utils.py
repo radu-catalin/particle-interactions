@@ -1,10 +1,28 @@
 import math
 import torch
+import torch.nn as nn
 from torch.utils.data import TensorDataset, DataLoader
 import matplotlib.pyplot as plt
 import numpy as np
 
 from physics import gen
+
+# device config
+device = torch.device('cpu')
+# device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
+def MSELoss_L2(predicted, target):
+	predicted_sum = np.array([], dtype=np.float32)
+
+	for i in range(target.shape[0]):
+		predicted_sum = np.append(predicted_sum, [0])
+		for j in range(target.shape[1]):
+			predicted_sum[i] += math.sqrt((predicted[i][j][0] - target[i][j][0]) ** 2 + (predicted[i][j][1] - target[i][j][1]) ** 2)
+		predicted_sum[i] = predicted_sum[i].mean()
+
+	predicted_sum = torch.tensor(predicted_sum, requires_grad = True)
+
+	return (predicted_sum).mean()
 
 def generate_dataset(n_body: int, dataset_size: int, batch_size: int, shuffle: str) -> DataLoader:
 	iterations = int(dataset_size / 100)
@@ -43,15 +61,19 @@ def generate_relational_matrix(x: torch.Tensor, normalize: bool = False) -> torc
 	if normalize:
 		lines_sum = A.sum(dim=1)
 		columns_sum = A.sum(dim=2)
+		maximum = A.max()
+		minimum = A.min()
 		A_normalized = np.zeros((x.shape[0], x.shape[1], x.shape[1]), dtype=np.float32)
 
 		for i in range(x.shape[0]):
 			for j in range(x.shape[1]):
 				for k in range(x.shape[1]):
-					A_normalized[i][j][k] = A[i][j][k] / (lines_sum[i][j] * columns_sum[i][k])
+					A_normalized[i][j][k] = (A[i][j][k] - minimum) / (minimum - maximum)
 
 		A = torch.Tensor(A_normalized)
 
+	# print(A)
+	# exit()
 	return A
 
 def plot_loss(loss, label, color='red') -> None:

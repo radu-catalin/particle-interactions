@@ -1,3 +1,4 @@
+import math
 import torch
 import torch.nn as nn
 from torch.nn.parameter import Parameter
@@ -8,6 +9,11 @@ class GraphConvolutionLayer(nn.Module):
 		self.input = input_size
 		self.output = output_size
 		self.w = Parameter(torch.FloatTensor(input_size, output_size))
+		self.reset_parameters()
+
+	def reset_parameters(self):
+		stdv = 1. / math.sqrt(self.w.size(1))
+		self.w.data.uniform_(-stdv, stdv)
 
 	def forward(self, x, A):
 		x = torch.matmul(A, x)

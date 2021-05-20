@@ -14,5 +14,5 @@ class GCN(nn.Module):
 	def forward(self, x, A):
 		x = self.linear(x)
 		x = self.conv(x, A)
-		x = F.relu(x)
+		x = torch.sigmoid(x)
 		return x
