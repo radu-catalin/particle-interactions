@@ -13,10 +13,10 @@ from model import GCN
 from utils import device, MSELoss_L2, generate_dataset, generate_relational_matrix, plot_loss
 
 # hyperparams
-num_epochs = 15
-batch_size = 64
+num_epochs = 10
+batch_size = 100
 learning_rate = 0.0001
-momentum = 0.9
+momentum = 0.6
 log_interval = int(5000 / batch_size)
 
 n_body = 2
@@ -33,10 +33,10 @@ train_loader = generate_dataset(
 )
 
 # examples = iter(train_loader)
-# examples.next()
 # samples, labels = examples.next()
-# print(samples.shape, labels.shape)
-
+# print(labels)
+# print(samples)
+# exit(0)
 # model
 model = GCN(input_size, hidden_size, output_size).to(device)
 
@@ -60,7 +60,7 @@ for epoch in range(num_epochs):
 		outputs = model(data, A).to(device)
 
 		if True in torch.isnan(outputs):
-			print('nan detected')
+			print('NaN detected')
 			exit(0)
 
 		# to do:
