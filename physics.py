@@ -19,7 +19,7 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as manimation
 
 # number of time steps
-ts = 100
+ts = 1000
 
 # number of features, [mass, x, y, vx, vy]
 num_features = 5
@@ -29,7 +29,6 @@ G = 10 ** 5
 
 # length of each time interval
 dt = 0.001
-
 
 def init(n_body, orbit):
 	"""
@@ -127,6 +126,7 @@ def gen(n_body, orbit):
 
 
 def make_video(xy, filename):
+	# print('123', xy.shape)
 	os.system("rm -rf pics/*")
 	FFMpegWriter = manimation.writers['ffmpeg']
 	metadata = dict(title='Movie Test', artist='Matplotlib', comment='Movie support!')
@@ -139,12 +139,11 @@ def make_video(xy, filename):
 	with writer.saving(fig, filename, fig_num):
 		for i in range(fig_num):
 			for j in range(len(xy[0])):
-				plt.plot(xy[i, j, 1], xy[i, j, 0], color[j % len(color)])
+				plt.plot(xy[i][j][1], xy[i][j][0], color[j % len(color)])
 			writer.grab_frame()
 
 
 if __name__ == '__main__':
 	test_data = gen(6, True)
-	print(test_data[0])
 	xy = test_data[:, :, 1:3]  # x, y positions
 	make_video(xy, "test.mp4")

@@ -8,7 +8,7 @@ class GraphConvolutionLayer(nn.Module):
 		super(GraphConvolutionLayer, self).__init__()
 		self.input = input_size
 		self.output = output_size
-		self.w = Parameter(torch.FloatTensor(input_size, output_size))
+		self.w = Parameter(torch.randn([input_size, output_size], requires_grad = True))
 		self.reset_parameters()
 
 	def reset_parameters(self):
@@ -19,3 +19,7 @@ class GraphConvolutionLayer(nn.Module):
 		x = torch.matmul(A, x)
 		x = torch.matmul(x, self.w)
 		return x
+
+	def zero_grad(self):
+		if self.w.grad is not None:
+			self.w.grad.zero_()

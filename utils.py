@@ -10,22 +10,11 @@ from physics import gen
 # device config
 # device = torch.device('cpu')
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+# device = 'cpu'
+print(device)
 
-def MSELoss_L2(predicted, target):
-	predicted_sum = np.array([], dtype=np.float32)
-
-	for i in range(target.shape[0]):
-		predicted_sum = np.append(predicted_sum, [0])
-		for j in range(target.shape[1]):
-			predicted_sum[i] += math.sqrt((predicted[i][j][0] - target[i][j][0]) ** 2 + (predicted[i][j][1] - target[i][j][1]) ** 2)
-		predicted_sum[i] = predicted_sum[i].mean()
-
-	predicted_sum = torch.tensor(predicted_sum, requires_grad = True)
-
-	return predicted_sum.mean()
-
-def generate_dataset(n_body: int, dataset_size: int, batch_size: int, shuffle: str) -> DataLoader:
-	iterations = int(dataset_size / 100)
+def generate_dataset(n_body: int, dataset_size: int, batch_size: int, shuffle: bool) -> DataLoader:
+	iterations = int(dataset_size / 1000)
 	np_dataset = []
 	np_targets = []
 
@@ -46,7 +35,7 @@ def generate_dataset(n_body: int, dataset_size: int, batch_size: int, shuffle: s
 	dataset_loader = DataLoader(
 		dataset = dataset_frames,
 		batch_size = batch_size,
-		shuffle = True
+		shuffle = shuffle
 	)
 
 	return dataset_loader
