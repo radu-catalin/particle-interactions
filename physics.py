@@ -19,7 +19,7 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as manimation
 
 # number of time steps
-ts = 1000
+ts = 100
 
 # number of features, [mass, x, y, vx, vy]
 num_features = 5

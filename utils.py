@@ -14,7 +14,7 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 print(device)
 
 def generate_dataset(n_body: int, dataset_size: int, batch_size: int, shuffle: bool) -> DataLoader:
-	iterations = int(dataset_size / 1000)
+	iterations = int(dataset_size / 100)
 	np_dataset = []
 	np_targets = []
 

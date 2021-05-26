@@ -14,21 +14,21 @@ from model import GCN, GCN_var1
 from utils import device, generate_dataset, generate_relational_matrix, plot_loss
 
 # hyperparams
-num_epochs = 1
+num_epochs = 10
 batch_size = 200
 learning_rate = 0.001
 momentum = 0.9
 log_interval = int(1000 / batch_size)
 
-n_body = 4
+n_body = 3
 
 input_size = 5
 hidden_size = 100
-output_size = 2  # multi-variable regression problem
+output_size = 2	# multi-variable regression problem
 
 train_loader = generate_dataset(
 	n_body=n_body,
-	dataset_size=100000,
+	dataset_size=600000,
 	batch_size=batch_size,
 	shuffle=True
 
@@ -36,7 +36,7 @@ train_loader = generate_dataset(
 
 test_loader = generate_dataset(
 	n_body=n_body,
-	dataset_size=10000,
+	dataset_size=50000,
 	batch_size=batch_size,
 	shuffle=False
 )
@@ -92,12 +92,13 @@ for epoch in range(num_epochs):
 			A = generate_relational_matrix(data, normalize=True).to(device)
 			output = model(data, A)
 			# calculate the loss for the current batch and add it across the entire dataset
-			test_loss += criterion(output, target)  # sum up batch loss
+			test_loss += criterion(output, target)	# sum up batch loss
 			num_iter += 1
 
-			if i == len(test_loader) - 1 and epoch == num_epochs - 1 :
+			if i == len(test_loader) - 1 and epoch >= num_epochs - 4 :
 				for i in range(output.shape[0]):
 					dots.append(output[i,:,:].detach().cpu().numpy())
+				make_video(dots, f'video{num_epochs - epoch}.mp4')
 	test_loss /= num_iter
 	print('\nTest set: Average loss: {:.4f}\n'.format(test_loss))
 	losses_test.append(test_loss.detach().cpu().numpy())
@@ -109,4 +110,3 @@ plot_loss(losses_test, 'test_loss', color='blue')
 plt.show()
 
 # plot_loss(accuracy_test,'test_accuracy')
-make_video(dots, "final_vid.mp4")
